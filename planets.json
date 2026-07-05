@@ -12,6 +12,12 @@
       "address": "185.223.31.70:7778",
       "seed": 2,
       "author": "Magiatus"
+    },
+    {
+      "name": "Gruene Insel (Demo)",
+      "address": "185.223.31.70:7779",
+      "seed": 3,
+      "author": "Magiatus"
     }
   ]
 }
