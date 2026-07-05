@@ -1,0 +1,8 @@
+{
+  "name": "Alpenwelt",
+  "seed": 21,
+  "mountainScale": 2.6,
+  "waterLevel": -0.02,
+  "climateBias": -0.3,
+  "treeDensity": 0.8
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Ozeanwelt",
+  "seed": 11,
+  "mountainScale": 0.9,
+  "waterLevel": 0.18,
+  "climateBias": 0.1,
+  "treeDensity": 1.0
+}
