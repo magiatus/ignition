@@ -20,10 +20,9 @@
 Unreal-Engine-Grafik — und die Basis für eine **Portal-Welt**: ein offenes Universum,
 in dem jeder seinen eigenen, selbst gehosteten Planeten andockt.
 
-- 🌍 **Ein ganzer Planet aus einem Seed** — Kontinente, Gebirge, Küsten, deterministisch generiert
+- 🌍 **Ein ganzer Planet ** — Kontinente, Gebirge, Küsten 
 - 🐠 **Unterwasserwelt** — Korallenriffe, Seegras und frei schwimmende Fischschwärme
-- 🌐 **Multiplayer** — dein Planet läuft auf deinem Server (headless, ~350 MB RAM), Freunde
-  verbinden sich direkt; nur der Seed reist übers Netz, nicht die Welt
+- 🌐 **Multiplayer** — dein Planet läuft auf deinem Servern
 - 🌀 **Die Vision** — Portale verbinden selbst gehostete Planeten mit eigener Grafik
   und eigenem Gameplay zu einem Universum
 
