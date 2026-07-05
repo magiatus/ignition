@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "worlds": [
+    {
+      "name": "Blaue Weite",
+      "address": "185.223.31.70:7777",
+      "seed": 1,
+      "author": "Magiatus"
+    },
+    {
+      "name": "Zweite Welt",
+      "address": "185.223.31.70:7778",
+      "seed": 2,
+      "author": "Magiatus"
+    }
+  ]
+}
