@@ -21,9 +21,7 @@ Unreal-Engine-Grafik — und die Basis für eine **Portal-Welt**: ein offenes Un
 in dem jeder seinen eigenen, selbst gehosteten Planeten andockt.
 
 - 🌍 **Ein ganzer Planet aus einem Seed** — Kontinente, Gebirge, Küsten, deterministisch generiert
-- 🌡️ **Sechs Biome** — Polar, Tundra, gemäßigt, Steppe, Wüste, Tropen aus Temperatur & Feuchte
 - 🐠 **Unterwasserwelt** — Korallenriffe, Seegras und frei schwimmende Fischschwärme
-- ✈️ **Frei fliegen & landen** — Schauflug-Autopilot vom Tiefflug bis zum 4,5-km-Panorama
 - 🌐 **Multiplayer** — dein Planet läuft auf deinem Server (headless, ~350 MB RAM), Freunde
   verbinden sich direkt; nur der Seed reist übers Netz, nicht die Welt
 - 🌀 **Die Vision** — Portale verbinden selbst gehostete Planeten mit eigener Grafik
@@ -45,14 +43,4 @@ in dem jeder seinen eigenen, selbst gehosteten Planeten andockt.
 Entwicklung live, Feedback, erste Testflüge:
 **[→ Discord beitreten](https://discord.gg/EqtFCJGrSU)**
 
-## 🛠️ Technik (Kurzfassung)
-
-- Unreal Engine 5.8, C++
-- Prozedurale Kugelwelt mit Chunk-Streaming nach Sichtweite (kein Nachlade-Poppen)
-- Server-autoritative Replikation; Dedicated-Betrieb headless via `-nullrhi -nosound`
-- Deterministische Welten: `-PlanetSeed=N` erzeugt auf Server und Client dieselbe Welt
-
----
-
-<p align="center">Ein Open-Source-Projekt von Magiatus · Welten gehören ihren Erstellern</p>
 
