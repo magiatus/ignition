@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IGNITION — Ein Universum aus Planeten</title>
+<meta name="description" content="Ignition: Prozedurale Planeten mit Unreal-Engine-Grafik. Erkunde per Flugzeug, tauche zu Riffen, hoste deinen eigenen Planeten — Open Source.">
+<meta property="og:title" content="IGNITION — Ein Universum aus Planeten">
+<meta property="og:description" content="Prozedurale Planeten mit Unreal-Engine-Grafik. Jeder baut seinen eigenen — Open Source.">
+<meta property="og:image" content="assets/hero.jpg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{
+    --bg:#07090f; --bg2:#0c101c; --panel:#111624; --panel2:#151b2c;
+    --line:#232c44; --line2:#2e3a5c;
+    --txt:#eef2fb; --mut:#96a0bd;
+    --fire:#ff7a3c; --fire2:#ffb347; --sky:#5aa7ff; --deep:#274b8f;
+    --discord:#5865F2; --ok:#4cd97b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+    line-height:1.65; overflow-x:hidden;
+  }
+  a{color:var(--sky); text-decoration:none}
+  img{max-width:100%; display:block}
+
+  /* ---------- Sternenhimmel ---------- */
+  .stars{position:fixed; inset:0; z-index:-2; background:
+    radial-gradient(1px 1px at 12% 22%, #ffffff88 50%, transparent 51%),
+    radial-gradient(1px 1px at 34% 71%, #ffffff55 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 56% 12%, #ffffff77 50%, transparent 51%),
+    radial-gradient(1px 1px at 68% 45%, #ffffff44 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 82% 82%, #ffffff66 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 31%, #ffffff55 50%, transparent 51%),
+    radial-gradient(1px 1px at 22% 88%, #ffffff44 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 45% 55%, #ffffff66 50%, transparent 51%),
+    radial-gradient(1px 1px at 5% 60%, #ffffff44 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 74% 8%, #ffffff88 50%, transparent 51%),
+    var(--bg);
+    background-size: 900px 700px;
+  }
+
+  .wrap{max-width:1140px; margin:0 auto; padding:0 22px}
+
+  /* ---------- Navigation ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(7,9,15,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{display:flex; align-items:center; justify-content:space-between; height:64px}
+  .brand{font-size:21px; font-weight:800; letter-spacing:2px; color:var(--txt)}
+  .brand b{background:linear-gradient(90deg,var(--fire),var(--fire2));
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  nav{display:flex; align-items:center; gap:26px}
+  nav a{color:var(--mut); font-size:15px; font-weight:600; transition:color .15s}
+  nav a:hover{color:var(--txt)}
+  .nav-cta{
+    padding:8px 18px; border-radius:9px; background:var(--discord);
+    color:#fff !important; font-weight:700;
+  }
+  .nav-cta:hover{filter:brightness(1.12)}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; min-height:92vh;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    background:url("assets/hero.jpg") center 30%/cover no-repeat, var(--bg2);
+  }
+  .hero::after{content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(7,9,15,.55) 0%, rgba(7,9,15,.25) 40%, rgba(7,9,15,.92) 92%, var(--bg) 100%);}
+  .hero-inner{position:relative; z-index:2; padding:90px 22px 110px; max-width:900px}
+  .hero h1{
+    font-size:clamp(56px,11vw,120px); font-weight:900; letter-spacing:.06em; line-height:1;
+    text-transform:uppercase;
+    background:linear-gradient(92deg, var(--fire) 0%, var(--fire2) 45%, var(--sky) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 6px 26px rgba(0,0,0,.65));
+  }
+  .hero .tag{
+    margin-top:18px; font-size:clamp(19px,3vw,27px); font-weight:700; color:var(--txt);
+    text-shadow:0 2px 14px rgba(0,0,0,.8);
+  }
+  .hero .sub{
+    margin:14px auto 0; max-width:640px; font-size:clamp(15px,2vw,18px); color:#cdd6ec;
+    text-shadow:0 2px 10px rgba(0,0,0,.8);
+  }
+  .cta-row{margin-top:38px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:15px 30px; border-radius:12px; font-size:17px; font-weight:800;
+    transition:transform .12s, filter .12s; border:1px solid transparent;
+  }
+  .btn:hover{transform:translateY(-2px); filter:brightness(1.1)}
+  .btn svg{width:22px; height:22px; fill:currentColor}
+  .btn-discord{background:var(--discord); color:#fff}
+  .btn-fire{background:linear-gradient(92deg,var(--fire),var(--fire2)); color:#1a0d05}
+  .btn-ghost{background:rgba(17,22,36,.75); color:var(--txt); border-color:var(--line2)}
+  .badges{margin-top:34px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+  .badge{
+    font-size:13px; font-weight:700; letter-spacing:.4px; color:#c9d4ee;
+    border:1px solid var(--line2); background:rgba(12,16,28,.7);
+    padding:6px 14px; border-radius:999px;
+  }
+  .badge.done{color:var(--ok); border-color:#1f5c37}
+
+  /* ---------- Abschnitte ---------- */
+  section{padding:96px 0}
+  .kicker{
+    font-size:14px; font-weight:800; letter-spacing:3px; text-transform:uppercase;
+    color:var(--fire); text-align:center; margin-bottom:10px;
+  }
+  h2{font-size:clamp(30px,4.5vw,44px); font-weight:900; text-align:center; letter-spacing:.5px}
+  .lead{max-width:720px; margin:16px auto 0; text-align:center; color:var(--mut); font-size:17px}
+
+  /* Pitch */
+  .pitch{background:linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); border-top:1px solid var(--line)}
+  .pitch-grid{margin-top:54px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
+  .pitch-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:30px;
+    text-align:center;
+  }
+  .pitch-card .num{
+    font-size:38px; font-weight:900;
+    background:linear-gradient(90deg,var(--fire),var(--fire2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .pitch-card h3{margin:8px 0 8px; font-size:19px}
+  .pitch-card p{color:var(--mut); font-size:15px}
+
+  /* Features */
+  .features-grid{margin-top:56px; display:grid; grid-template-columns:repeat(3,1fr); gap:24px}
+  .feature{
+    background:var(--panel); border:1px solid var(--line); border-radius:18px; overflow:hidden;
+    transition:transform .18s, border-color .18s, box-shadow .18s;
+  }
+  .feature:hover{transform:translateY(-6px); border-color:var(--line2); box-shadow:0 18px 44px rgba(0,0,0,.45)}
+  .feature .pic{aspect-ratio:16/10; overflow:hidden; background:var(--panel2)}
+  .feature .pic img{width:100%; height:100%; object-fit:cover; transition:transform .4s}
+  .feature:hover .pic img{transform:scale(1.05)}
+  .feature .body{padding:22px 24px 26px}
+  .feature h3{font-size:19px; margin-bottom:8px}
+  .feature p{color:var(--mut); font-size:15px}
+
+  /* Roadmap */
+  .roadmap{background:var(--bg2); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .timeline{max-width:780px; margin:60px auto 0; position:relative}
+  .timeline::before{
+    content:""; position:absolute; left:26px; top:6px; bottom:6px; width:3px;
+    background:linear-gradient(180deg, var(--ok) 0%, var(--ok) 12%, var(--line2) 22%, var(--line2) 100%);
+    border-radius:2px;
+  }
+  .mile{position:relative; padding:0 0 42px 78px}
+  .mile:last-child{padding-bottom:6px}
+  .mile .dot{
+    position:absolute; left:13px; top:2px; width:29px; height:29px; border-radius:50%;
+    background:var(--panel2); border:3px solid var(--line2);
+    display:grid; place-items:center; font-size:13px; font-weight:900; color:var(--mut);
+  }
+  .mile.done .dot{background:#0e2b1a; border-color:var(--ok); color:var(--ok)}
+  .mile h3{font-size:19px}
+  .mile h3 .m{
+    font-size:12px; font-weight:900; letter-spacing:1px; vertical-align:2px;
+    color:var(--fire); margin-right:10px;
+  }
+  .mile.done h3 .m{color:var(--ok)}
+  .mile p{color:var(--mut); font-size:15px; margin-top:4px}
+  .mile .state{
+    display:inline-block; margin-top:8px; font-size:12px; font-weight:800; letter-spacing:1px;
+    padding:3px 12px; border-radius:999px;
+  }
+  .mile.done .state{background:#0e2b1a; color:var(--ok); border:1px solid #1f5c37}
+  .mile.now .state{background:#2b1a0e; color:var(--fire2); border:1px solid #5c3a1f}
+
+  /* Vision Band */
+  .vision{
+    position:relative; text-align:center; overflow:hidden;
+    background:url("assets/feature_portal.jpg") center/cover no-repeat, var(--bg2);
+  }
+  .vision::after{content:""; position:absolute; inset:0; background:rgba(7,9,15,.78)}
+  .vision .wrap{position:relative; z-index:2; max-width:860px}
+  .vision blockquote{
+    font-size:clamp(22px,3.6vw,34px); font-weight:800; line-height:1.35;
+  }
+  .vision blockquote b{color:var(--fire2)}
+  .vision p{margin-top:16px; color:#c3cde6}
+
+  /* Community */
+  .community-card{
+    margin-top:54px; display:grid; grid-template-columns:1.2fr 1fr; gap:0;
+    background:var(--panel); border:1px solid var(--line); border-radius:22px; overflow:hidden;
+  }
+  .community-card .left{padding:52px}
+  .community-card h3{font-size:28px; margin-bottom:12px}
+  .community-card p{color:var(--mut); margin-bottom:26px}
+  .community-card .right{
+    background:url("assets/feature_multiplayer.jpg") center/cover no-repeat, var(--panel2);
+    min-height:300px;
+  }
+  .oss-row{margin-top:26px; display:flex; gap:14px; flex-wrap:wrap}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line); padding:44px 0 54px; background:var(--bg)}
+  footer .wrap{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px}
+  footer .mut{color:var(--mut); font-size:14px}
+  footer nav{gap:20px}
+
+  @media(max-width:900px){
+    .pitch-grid,.features-grid{grid-template-columns:1fr 1fr}
+    .community-card{grid-template-columns:1fr}
+    .community-card .right{min-height:220px}
+    nav a.hide-m{display:none}
+  }
+  @media(max-width:600px){
+    .pitch-grid,.features-grid{grid-template-columns:1fr}
+    section{padding:70px 0}
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<header>
+  <div class="wrap">
+    <div class="brand">IGNIT<b>ION</b></div>
+    <nav>
+      <a class="hide-m" href="#features">Features</a>
+      <a class="hide-m" href="#roadmap">Roadmap</a>
+      <a class="hide-m" href="#community">Community</a>
+      <a class="nav-cta" href="https://discord.gg/EqtFCJGrSU" target="_blank" rel="noopener">Discord</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Ignition</h1>
+    <div class="tag">Ein Universum aus Planeten — jeder baut seinen eigenen.</div>
+    <p class="sub">Prozedurale Welten mit voller Unreal-Engine-Grafik. Erkunde per Flugzeug,
+       lande, tauche zu Riffen — und hoste deinen Planeten selbst. Open Source.</p>
+    <div class="cta-row">
+      <a class="btn btn-discord" href="https://discord.gg/EqtFCJGrSU" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.04.03C.53 9.05-.32 13.58.1 18.06c0 .02.01.04.03.05a19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13c.13-.09.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08.01c.12.1.24.2.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.64-1.87.88a.08.08 0 0 0-.04.12c.36.7.77 1.36 1.22 2a.08.08 0 0 0 .08.02 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+        Discord beitreten
+      </a>
+      <a class="btn btn-fire" href="#roadmap">Roadmap ansehen</a>
+      <a class="btn btn-ghost" id="gh-link" href="#community">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.35.95.1-.74.4-1.25.72-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.68.41.35.77 1.04.77 2.1v3.12c0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+        Open Source
+      </a>
+    </div>
+    <div class="badges">
+      <span class="badge">Unreal Engine 5.8</span>
+      <span class="badge">Windows</span>
+      <span class="badge">Multiplayer</span>
+      <span class="badge done">M0: Eigener Server ✓</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PITCH ============ -->
+<section class="pitch">
+  <div class="wrap">
+    <div class="kicker">Das Spiel</div>
+    <h2>Ein ganzer Planet. Aus einem einzigen Seed.</h2>
+    <p class="lead">Kein Download riesiger Welten: Dein Planet entsteht deterministisch aus einer Zahl —
+       Kontinente, Gebirge, Klimazonen, Wälder, Riffe. Wer denselben Seed hat, steht auf derselben Welt.</p>
+    <div class="pitch-grid">
+      <div class="pitch-card">
+        <div class="num">1</div>
+        <h3>Erkunden</h3>
+        <p>Steig ins Propellerflugzeug: Tiefflug über Baumkronen oder Panorama aus 4,5&nbsp;km —
+           mit sichtbarer Planetenkrümmung.</p>
+      </div>
+      <div class="pitch-card">
+        <div class="num">2</div>
+        <h3>Landen &amp; Tauchen</h3>
+        <p>Lande, wo es dir gefällt, erkunde zu Fuß — oder tauch ab zu Korallenriffen
+           und Fischschwärmen.</p>
+      </div>
+      <div class="pitch-card">
+        <div class="num">3</div>
+        <h3>Selbst hosten</h3>
+        <p>Dein Planet läuft auf deinem Server — headless, 350&nbsp;MB RAM.
+           Freunde verbinden sich direkt mit deiner IP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="kicker">Features</div>
+    <h2>Was heute schon drin ist</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="pic"><img src="assets/feature_planet.jpg" alt="Prozeduraler Planet aus dem Orbit" loading="lazy"></div>
+        <div class="body">
+          <h3>Prozeduraler Planet</h3>
+          <p>Eine komplette Kugelwelt, gestreamt nach Sichtweite — kein Kacheln, kein Nachladen-Poppen,
+             echte Krümmung am Horizont.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="pic"><img src="assets/feature_biomes.jpg" alt="Sechs Biome vom Pol bis zu den Tropen" loading="lazy"></div>
+        <div class="body">
+          <h3>Sechs Biome</h3>
+          <p>Polar, Tundra, gemäßigt, Steppe, Wüste, Tropen — aus Temperatur und Feuchte berechnet,
+             vom Schnee bis zum Regenwald.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="pic"><img src="assets/feature_underwater.jpg" alt="Unterwasserwelt mit Riffen und Fischen" loading="lazy"></div>
+        <div class="body">
+          <h3>Unterwasserwelt</h3>
+          <p>Korallenriffe, Seegraswiesen und frei schwimmende Fischschwärme —
+             tauch einfach unter die Wasseroberfläche.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="pic"><img src="assets/feature_flight.jpg" alt="Propellerflugzeug über der Küste" loading="lazy"></div>
+        <div class="body">
+          <h3>Frei fliegen &amp; landen</h3>
+          <p>Schauflug-Autopilot oder Handsteuerung, Landung per Knopfdruck —
+             und am Boden geht es zu Fuß weiter.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="pic"><img src="assets/feature_multiplayer.jpg" alt="Mehrere Flugzeuge über einem Planeten" loading="lazy"></div>
+        <div class="body">
+          <h3>Multiplayer</h3>
+          <p>Server-autoritative Replikation: Dein Planet läuft bei dir, Freunde fliegen mit —
+             nur der Seed reist übers Netz, nicht die Welt.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="pic"><img src="assets/feature_portal.jpg" alt="Portal zwischen Planeten" loading="lazy"></div>
+        <div class="body">
+          <h3>Die Portal-Vision</h3>
+          <p>Jeder dockt seinen eigenen Planeten an: eigene Grafik, eigenes Gameplay —
+             und Portale verbinden alle Welten zu einem Universum.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="roadmap" id="roadmap">
+  <div class="wrap">
+    <div class="kicker">Roadmap</div>
+    <h2>Vom Planeten zum Universum</h2>
+    <p class="lead">Jeder Meilenstein ist einzeln spielbar — kein Warten auf das große Ganze.</p>
+    <div class="timeline">
+      <div class="mile done">
+        <div class="dot">✓</div>
+        <h3><span class="m">M0</span>Dein Planet auf deinem Server</h3>
+        <p>Der Planet läuft headless auf einem Server, du startest nur den Client —
+           Spieler sehen einander über das Internet.</p>
+        <span class="state">FERTIG</span>
+      </div>
+      <div class="mile now">
+        <div class="dot">M1</div>
+        <h3><span class="m">M1</span>Portal = Serverwechsel</h3>
+        <p>Durch ein Portal fliegen und nahtlos auf dem Planeten eines anderen Servers ankommen —
+           der Kern der Portal-Welt.</p>
+        <span class="state">ALS NÄCHSTES</span>
+      </div>
+      <div class="mile">
+        <div class="dot">M2</div>
+        <h3><span class="m">M2</span>Verzeichnis &amp; Hub</h3>
+        <p>Planeten entdecken: ein Verzeichnis aller angedockten Welten, erreichbar aus dem
+           Raumschiff-Hub.</p>
+      </div>
+      <div class="mile">
+        <div class="dot">M3</div>
+        <h3><span class="m">M3</span>Welt-Format &amp; Starter-Kit</h3>
+        <p>Baue deinen eigenen Planeten im Unreal-Editor — mit Starter-Kit,
+           Vorlagen und klarem Welt-Format.</p>
+      </div>
+      <div class="mile">
+        <div class="dot">M4</div>
+        <h3><span class="m">M4</span>Skripting &amp; Spielmodi</h3>
+        <p>Eigenes Gameplay per Lua-Skript: Rennen, Angeln, Piraten —
+           sicher gesandboxt auf deinem Server.</p>
+      </div>
+      <div class="mile">
+        <div class="dot">M5</div>
+        <h3><span class="m">M5</span>Selbst-Hosting für alle</h3>
+        <p>One-Click-Server: Jeder kann seinen Planeten hosten und ans Portal hängen —
+           ohne Technik-Studium.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISION ============ -->
+<section class="vision">
+  <div class="wrap">
+    <blockquote>„Flieg durch ein Portal und steh in einer Welt, die jemand anderes gebaut hat —
+      <b>eigene Grafik, eigenes Gameplay, dein Planet gehört dir.</b>"</blockquote>
+    <p>Das ist die Idee hinter Ignition: ein offenes Universum aus selbst gehosteten Planeten,
+       verbunden durch Portale — mit der Grafik einer modernen Engine.</p>
+  </div>
+</section>
+
+<!-- ============ COMMUNITY ============ -->
+<section id="community">
+  <div class="wrap">
+    <div class="kicker">Community</div>
+    <h2>Bau das Universum mit</h2>
+    <div class="community-card">
+      <div class="left">
+        <h3>Komm auf den Discord</h3>
+        <p>Entwicklung live mitverfolgen, Feedback geben, erste Testflüge fliegen —
+           und später deinen eigenen Planeten andocken. Ignition ist Open Source:
+           Der Code ist offen, Welten gehören ihren Erstellern.</p>
+        <div class="oss-row">
+          <a class="btn btn-discord" href="https://discord.gg/EqtFCJGrSU" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.04.03C.53 9.05-.32 13.58.1 18.06c0 .02.01.04.03.05a19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13c.13-.09.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08.01c.12.1.24.2.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.64-1.87.88a.08.08 0 0 0-.04.12c.36.7.77 1.36 1.22 2a.08.08 0 0 0 .08.02 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+            discord.gg/EqtFCJGrSU
+          </a>
+          <a class="btn btn-ghost" id="gh-link2" href="#" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.35.95.1-.74.4-1.25.72-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.68.41.35.77 1.04.77 2.1v3.12c0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+      <div class="right"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand">IGNIT<b>ION</b></div>
+      <div class="mut">Ein Open-Source-Projekt von Magiatus · in Entwicklung</div>
+    </div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="https://discord.gg/EqtFCJGrSU" target="_blank" rel="noopener">Discord</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
+
