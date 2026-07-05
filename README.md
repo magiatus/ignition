@@ -26,16 +26,7 @@ in dem jeder seinen eigenen, selbst gehosteten Planeten andockt.
 - 🌀 **Die Vision** — Portale verbinden selbst gehostete Planeten mit eigener Grafik
   und eigenem Gameplay zu einem Universum
 
-## 🚀 Roadmap
 
-| Meilenstein | Inhalt | Status |
-|---|---|---|
-| **M0** | Dein Planet auf deinem Server, Client verbindet übers Internet | ✅ **fertig** |
-| **M1** | Portal = Serverwechsel: durchfliegen, auf fremdem Planeten ankommen | 🔶 als Nächstes |
-| **M2** | Verzeichnis & Hub: Planeten entdecken | ⬜ |
-| **M3** | Welt-Format & Starter-Kit: eigene Planeten im UE-Editor bauen | ⬜ |
-| **M4** | Lua-Skripting: eigene Spielmodi (Rennen, Angeln, …) | ⬜ |
-| **M5** | One-Click-Selbst-Hosting für alle | ⬜ |
 
 ## 💬 Community
 
