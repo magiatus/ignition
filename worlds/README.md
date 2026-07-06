@@ -68,6 +68,38 @@ Meilenstein):
 > Start `[World] Spieler-Spawn bei lat=… lon=…` — nimm DIESE Koordinaten als Zentrum
 > für Anker + Platzierungen, dann passt alles zusammen.
 
+## Welt-Skripte (`world.lua`) — eigene Spielmodi
+
+Leg eine **`world.lua`** neben deine `world.json` (oder gib sie mit
+`-WorldScript=C:\pfad\world.lua` an) — der Server führt sie aus und macht aus deiner Welt
+einen **Spielmodus**. Das Skript läuft **nur auf dem Server** (gesandboxt: kein Datei-,
+Netz- oder OS-Zugriff; Endlosschleifen und Speicherfresser werden abgebrochen, ohne den
+Server zu reißen). Die Spieler brauchen **kein Update** — sie sehen das replizierte HUD.
+
+**Callbacks** (definierst du als globale Funktionen, alle optional):
+
+| Funktion | Wann |
+|---|---|
+| `on_start()` | einmal beim Serverstart (Welt steht) |
+| `on_tick(dt)` | jeden Frame, `dt` = Sekunden seit letztem Tick |
+| `on_player_join(p)` / `on_player_leave(p)` | Spieler `p` (1-basiert) kommt/geht |
+
+**API** (`ign.*` — die Decke wächst mit der Zeit):
+
+| Funktion | Wirkung |
+|---|---|
+| `ign.log(text)` | Zeile ins Server-Log (`print` geht auch dorthin) |
+| `ign.hud(text)` | HUD-Panel oben links bei ALLEN Spielern (mehrzeilig via `\n`) |
+| `ign.anchor(name)` | → `lat, lon` des Ankers aus der world.json (oder `nil`) |
+| `ign.player_count()` | → Anzahl Spieler |
+| `ign.player_pos(p)` | → `lat, lon, alt_m` von Spieler `p` (oder `nil`) |
+| `ign.dist(lat1,lon1,lat2,lon2)` | → Großkreis-Distanz in Metern |
+| `ign.time()` | → Sekunden seit Serverstart |
+
+**Beispiel:** [`race.lua`](race.lua) — ein komplettes Rennen über Checkpoint-Anker
+(`checkpoint_1…n`): Fortschritt und Zielzeit pro Spieler live im HUD. Zum Ausprobieren
+als `world.lua` neben deine world.json legen und Checkpoint-Anker eintragen.
+
 ## Vorlagen
 
 - [`world.default.json`](world.default.json) — gemäßigte Standardwelt (grün, Wälder, Küsten)
@@ -77,6 +109,9 @@ Meilenstein):
 - [`world.alpine.json`](world.alpine.json) — Alpenwelt (dramatische Gipfel, kühl)
 - [`world.lighthouse.json`](world.lighthouse.json) — Leuchtturm-Küste (Beispiel für
   `placements` + `spawn`-Anker: Turm, Formen-Ring, Bäume am Startpunkt)
+- [`world.race.json`](world.race.json) + [`race.lua`](race.lua) — Küsten-Rennen
+  (4 Checkpoint-Anker mit Markierungs-Kugeln + komplettes Rennen-Skript; die Lua-Datei
+  als `world.lua` neben die world.json legen)
 
 > Hinweis: Der Client baut den Planeten aus dem Seed **und** den Parametern, die der Server
 > schickt — er sieht also GENAU deine Welt. Terrain wird nicht übers Netz übertragen, nur

@@ -1,0 +1,22 @@
+{
+  "name": "Küsten-Rennen",
+  "seed": 1,
+  "mountainScale": 1.0,
+  "waterLevel": 0.0,
+  "climateBias": 0.0,
+  "treeDensity": 1.0,
+  "anchors": [
+    { "name": "spawn",        "lat": -4.26, "lon": 15.74 },
+    { "name": "checkpoint_1", "lat": -4.26, "lon": 17.00 },
+    { "name": "checkpoint_2", "lat": -3.50, "lon": 18.20 },
+    { "name": "checkpoint_3", "lat": -2.60, "lon": 17.20 },
+    { "name": "checkpoint_4", "lat": -3.20, "lon": 15.60 }
+  ],
+  "placements": [
+    { "asset": "sphere", "lat": -4.26, "lon": 17.00, "alt": 150, "scale": 30, "color": "#FFD020" },
+    { "asset": "sphere", "lat": -3.50, "lon": 18.20, "alt": 150, "scale": 30, "color": "#FF8010" },
+    { "asset": "sphere", "lat": -2.60, "lon": 17.20, "alt": 150, "scale": 30, "color": "#FF3020" },
+    { "asset": "sphere", "lat": -3.20, "lon": 15.60, "alt": 150, "scale": 30, "color": "#B040E0" },
+    { "asset": "cylinder", "lat": -4.26, "lon": 15.74, "scale": 25, "color": "#20C040" }
+  ]
+}
