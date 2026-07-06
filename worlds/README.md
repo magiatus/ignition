@@ -95,6 +95,9 @@ Server zu reißen). Die Spieler brauchen **kein Update** — sie sehen das repli
 | `ign.player_pos(p)` | → `lat, lon, alt_m` von Spieler `p` (oder `nil`) |
 | `ign.dist(lat1,lon1,lat2,lon2)` | → Großkreis-Distanz in Metern |
 | `ign.time()` | → Sekunden seit Serverstart |
+| `ign.spawn(asset, lat, lon [, alt, yaw, scale, color])` | Objekt zur LAUFZEIT spawnen (alle Spieler sehen es) → `id` |
+| `ign.despawn(id)` | gespawntes Objekt entfernen → `true`/`false` |
+| `ign.teleport(p, lat, lon [, alt_m])` | Spieler `p` dorthin versetzen (Standard: 90 m über Grund) |
 
 **Beispiel:** [`race.lua`](race.lua) — ein komplettes Rennen über Checkpoint-Anker
 (`checkpoint_1…n`): Fortschritt und Zielzeit pro Spieler live im HUD. Zum Ausprobieren
