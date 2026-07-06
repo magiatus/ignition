@@ -83,21 +83,57 @@ Server zu reißen). Die Spieler brauchen **kein Update** — sie sehen das repli
 | `on_start()` | einmal beim Serverstart (Welt steht) |
 | `on_tick(dt)` | jeden Frame, `dt` = Sekunden seit letztem Tick |
 | `on_player_join(p)` / `on_player_leave(p)` | Spieler `p` (1-basiert) kommt/geht |
+| `on_enter(p, zone)` / `on_exit(p, zone)` | Spieler betritt/verlässt eine `ign.zone` |
 
-**API** (`ign.*` — die Decke wächst mit der Zeit):
+**Timer** (eingebaut, ohne `ign.`-Präfix): `after(sek, fn)`, `every(sek, fn)` → Handle,
+`stop(handle)`.
+
+**API** (`ign.*` — Werkzeugkasten; `ign.api_version` = 2. Die Decke wächst — Modi wie
+Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua)):
+
+*Info & Spieler*
 
 | Funktion | Wirkung |
 |---|---|
 | `ign.log(text)` | Zeile ins Server-Log (`print` geht auch dorthin) |
 | `ign.hud(text)` | HUD-Panel oben links bei ALLEN Spielern (mehrzeilig via `\n`) |
-| `ign.anchor(name)` | → `lat, lon` des Ankers aus der world.json (oder `nil`) |
-| `ign.player_count()` | → Anzahl Spieler |
-| `ign.player_pos(p)` | → `lat, lon, alt_m` von Spieler `p` (oder `nil`) |
-| `ign.dist(lat1,lon1,lat2,lon2)` | → Großkreis-Distanz in Metern |
 | `ign.time()` | → Sekunden seit Serverstart |
-| `ign.spawn(asset, lat, lon [, alt, yaw, scale, color])` | Objekt zur LAUFZEIT spawnen (alle Spieler sehen es) → `id` |
-| `ign.despawn(id)` | gespawntes Objekt entfernen → `true`/`false` |
-| `ign.teleport(p, lat, lon [, alt_m])` | Spieler `p` dorthin versetzen (Standard: 90 m über Grund) |
+| `ign.world_name()` | → Name der Welt |
+| `ign.player_count()` | → Anzahl Spieler |
+| `ign.player_name(p)` | → Anzeigename von Spieler `p` |
+| `ign.player_pos(p)` | → `lat, lon, alt_m` von Spieler `p` (oder `nil`) |
+| `ign.teleport(p, lat, lon [, alt_m])` | Spieler versetzen (Standard: 90 m über Grund) |
+| `ign.set_mode(p, "plane"\|"walker")` | Bewegungsmodus wechseln (fliegen ↔ laufen) |
+| `ign.set_speed(p, mult)` | Tempo-Faktor 0.1–20 auf die Basiswerte |
+| `ign.set_autopilot(p, an)` | Schauflug an/aus (nur Flieger) |
+
+*Welt abfragen* (der prozedurale Planet ist per Code lesbar)
+
+| Funktion | Wirkung |
+|---|---|
+| `ign.ground(lat, lon)` | → Geländehöhe über Meer in m (negativ = unter Wasser) |
+| `ign.is_water(lat, lon)` | → liegt der Punkt im Wasser? |
+| `ign.biome(lat, lon)` | → `temp` (0 polar…1 tropisch), `moist` (0 trocken…1 nass) |
+| `ign.anchor(name)` | → `lat, lon` des Ankers aus der world.json (oder `nil`) |
+| `ign.dist(lat1,lon1,lat2,lon2)` | → Großkreis-Distanz in Metern |
+
+*Objekte & Trigger*
+
+| Funktion | Wirkung |
+|---|---|
+| `ign.spawn(asset, lat, lon [, alt, yaw, scale, color])` | Objekt zur Laufzeit spawnen → `id` |
+| `ign.despawn(id)` | Objekt entfernen → `true`/`false` |
+| `ign.move(id, lat, lon [, alt])` | Objekt versetzen (sofort; Gleit-Animation kommt) |
+| `ign.set_color(id, "#RRGGBB")` / `ign.set_scale(id, s)` | Objekt umfärben / skalieren |
+| `ign.zone(name, lat, lon, radius_m)` | Trigger-Kreis anlegen → `on_enter`/`on_exit` |
+| `ign.remove_zone(name)` | Trigger-Kreis entfernen |
+
+*Umwelt* (repliziert — alle Spieler sehen dieselbe Stimmung)
+
+| Funktion | Wirkung |
+|---|---|
+| `ign.sun(pitch, yaw)` | Sonnenwinkel in Grad (−90 = senkrecht Mittag, ~0 = Horizont) — Tag/Nacht per Skript |
+| `ign.fog(dichte [, r, g, b])` | Nebel: Dichte (~0.00015 Standard) + Farbe 0–1 |
 
 **Beispiel:** [`race.lua`](race.lua) — ein komplettes Rennen über Checkpoint-Anker
 (`checkpoint_1…n`): Fortschritt und Zielzeit pro Spieler live im HUD. Zum Ausprobieren
