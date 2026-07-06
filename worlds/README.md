@@ -59,9 +59,14 @@ Meilenstein):
 
 ```json
 "anchors": [
-  { "name": "spawn", "lat": 15.0, "lon": 40.0 }
+  { "name": "spawn", "lat": -4.26, "lon": 15.74 }
 ]
 ```
+
+> **Tipp:** Liegt dein `spawn`-Anker im Wasser, verschiebt das Spiel den Startpunkt zur
+> nächsten Küste — deine `placements` bleiben aber am Anker. Das Server-Log zeigt beim
+> Start `[World] Spieler-Spawn bei lat=… lon=…` — nimm DIESE Koordinaten als Zentrum
+> für Anker + Platzierungen, dann passt alles zusammen.
 
 ## Vorlagen
 

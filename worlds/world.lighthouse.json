@@ -6,18 +6,18 @@
   "climateBias": 0.0,
   "treeDensity": 1.0,
   "anchors": [
-    { "name": "spawn", "lat": 4.32, "lon": 19.29 }
+    { "name": "spawn", "lat": -4.26, "lon": 15.74 }
   ],
   "placements": [
-    { "asset": "cylinder",  "lat": 4.32, "lon": 19.29, "scale": 30, "color": "#E03020" },
-    { "asset": "cone",      "lat": 4.32, "lon": 19.29, "alt": 30, "scale": 22, "color": "#FFD020" },
-    { "asset": "cube",      "lat": 4.62, "lon": 19.29, "scale": 30, "color": "#2080FF" },
-    { "asset": "cube",      "lat": 4.02, "lon": 19.29, "scale": 30, "color": "#20C040" },
-    { "asset": "cube",      "lat": 4.32, "lon": 19.65, "scale": 30, "color": "#B040E0" },
-    { "asset": "cube",      "lat": 4.32, "lon": 18.93, "scale": 30, "color": "#FF8010" },
-    { "asset": "sphere",    "lat": 4.50, "lon": 19.47, "scale": 25, "color": "#10C0C0" },
-    { "asset": "pine_tall", "lat": 4.44, "lon": 19.17, "scale": 4 },
-    { "asset": "tree",      "lat": 4.20, "lon": 19.41, "scale": 4 },
-    { "asset": "stone",     "lat": 4.38, "lon": 19.35, "scale": 10 }
+    { "asset": "cylinder",  "lat": -4.26, "lon": 15.74, "scale": 25, "color": "#E03020" },
+    { "asset": "cone",      "lat": -4.26, "lon": 15.74, "alt": 25, "scale": 18, "color": "#FFD020" },
+    { "asset": "cube",      "lat": -3.96, "lon": 15.74, "scale": 20, "color": "#2080FF" },
+    { "asset": "cube",      "lat": -4.56, "lon": 15.74, "scale": 20, "color": "#20C040" },
+    { "asset": "cube",      "lat": -4.26, "lon": 16.04, "scale": 20, "color": "#B040E0" },
+    { "asset": "cube",      "lat": -4.26, "lon": 15.44, "scale": 20, "color": "#FF8010" },
+    { "asset": "sphere",    "lat": -4.08, "lon": 15.92, "alt": 60, "scale": 20, "color": "#10C0C0" },
+    { "asset": "pine_tall", "lat": -4.20, "lon": 15.68, "scale": 4 },
+    { "asset": "tree",      "lat": -4.38, "lon": 15.86, "scale": 4 },
+    { "asset": "stone",     "lat": -4.32, "lon": 15.80, "scale": 10 }
   ]
 }
