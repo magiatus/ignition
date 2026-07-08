@@ -97,7 +97,11 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 |---|---|
 | `ign.log(text)` | Zeile ins Server-Log (`print` geht auch dorthin) |
 | `ign.hud(text)` | HUD-Panel oben links bei ALLEN Spielern (mehrzeilig via `\n`) |
+| `ign.title(text)` | große Einblendung in der Bildschirmmitte (`""` = weg) |
 | `ign.time()` | → Sekunden seit Serverstart |
+| `ign.set_score(p, n)` / `ign.add_score(p, d)` / `ign.score(p)` | Punktestand — HUD zeigt automatisch ein Scoreboard |
+| `ign.set_var(key, wert)` / `ign.var(key)` | Welt-Variable (Zahl/Text), repliziert; `nil` löscht |
+| `ign.marker(name, lat, lon [, color])` / `ign.remove_marker(name)` | Welt-Marker (HUD projiziert + Rand-Pfeil) |
 | `ign.world_name()` | → Name der Welt |
 | `ign.player_count()` | → Anzahl Spieler |
 | `ign.player_name(p)` | → Anzeigename von Spieler `p` |
