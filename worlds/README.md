@@ -84,6 +84,8 @@ Server zu reißen). Die Spieler brauchen **kein Update** — sie sehen das repli
 | `on_tick(dt)` | jeden Frame, `dt` = Sekunden seit letztem Tick |
 | `on_player_join(p)` / `on_player_leave(p)` | Spieler `p` (1-basiert) kommt/geht |
 | `on_enter(p, zone)` / `on_exit(p, zone)` | Spieler betritt/verlässt eine `ign.zone` |
+| `on_interact(p, id)` | Spieler drückt **E** vor einem Objekt (`id`) |
+| `on_key(p, key)` | Spieler drückt eine Taste (`"Q"`,`"R"`,`"T"`,`"C"`,`"V"`,`"B"`,`"3"`…`"9"`) |
 
 **Timer** (eingebaut, ohne `ign.`-Präfix): `after(sek, fn)`, `every(sek, fn)` → Handle,
 `stop(handle)`.
@@ -102,6 +104,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.set_score(p, n)` / `ign.add_score(p, d)` / `ign.score(p)` | Punktestand — HUD zeigt automatisch ein Scoreboard |
 | `ign.set_var(key, wert)` / `ign.var(key)` | Welt-Variable (Zahl/Text), repliziert; `nil` löscht |
 | `ign.marker(name, lat, lon [, color])` / `ign.remove_marker(name)` | Welt-Marker (HUD projiziert + Rand-Pfeil) |
+| `ign.msg(p, text)` | private Einblendung NUR für Spieler `p` |
 | `ign.world_name()` | → Name der Welt |
 | `ign.player_count()` | → Anzahl Spieler |
 | `ign.player_name(p)` | → Anzeigename von Spieler `p` |
