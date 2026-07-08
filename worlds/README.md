@@ -102,10 +102,16 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.player_count()` | → Anzahl Spieler |
 | `ign.player_name(p)` | → Anzeigename von Spieler `p` |
 | `ign.player_pos(p)` | → `lat, lon, alt_m` von Spieler `p` (oder `nil`) |
+| `ign.player_vel(p)` | → Tempo in m/s |
+| `ign.player_heading(p)` | → Kompass-Kurs 0–360° |
+| `ign.player_mode(p)` | → `"plane"` oder `"walker"` |
 | `ign.teleport(p, lat, lon [, alt_m])` | Spieler versetzen (Standard: 90 m über Grund) |
+| `ign.respawn(p)` | zurück zum `spawn`-Anker (sonst nächstes Land) |
 | `ign.set_mode(p, "plane"\|"walker")` | Bewegungsmodus wechseln (fliegen ↔ laufen) |
 | `ign.set_speed(p, mult)` | Tempo-Faktor 0.1–20 auf die Basiswerte |
 | `ign.set_autopilot(p, an)` | Schauflug an/aus (nur Flieger) |
+| `ign.freeze(p, an)` | Fortbewegung stoppen (Umschauen bleibt) |
+| `ign.set_gravity(p, faktor)` / `ign.set_jump(p, faktor)` | Schwerkraft / Sprungkraft (Läufer) |
 
 *Welt abfragen* (der prozedurale Planet ist per Code lesbar)
 
@@ -113,9 +119,15 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 |---|---|
 | `ign.ground(lat, lon)` | → Geländehöhe über Meer in m (negativ = unter Wasser) |
 | `ign.is_water(lat, lon)` | → liegt der Punkt im Wasser? |
+| `ign.slope(lat, lon)` | → Hangneigung in Grad (0 = flach, 90 = senkrecht) |
 | `ign.biome(lat, lon)` | → `temp` (0 polar…1 tropisch), `moist` (0 trocken…1 nass) |
 | `ign.anchor(name)` | → `lat, lon` des Ankers aus der world.json (oder `nil`) |
+| `ign.find_land(lat, lon)` | → nächster Landpunkt als `lat, lon` |
+| `ign.random_land(lat, lon, radius_m)` | → zufälliger Landpunkt im Umkreis (oder `nil`) |
+| `ign.bearing(lat1,lon1,lat2,lon2)` | → Kurswinkel 0–360° von A nach B |
 | `ign.dist(lat1,lon1,lat2,lon2)` | → Großkreis-Distanz in Metern |
+| `ign.raycast(lat1,lon1,alt1, lat2,lon2,alt2)` | → Sichtlinie: Treffer als `lat, lon` (oder `nil`) |
+| `ign.players_in(lat, lon, radius_m)` | → Anzahl Spieler im Umkreis |
 
 *Objekte & Trigger*
 
@@ -123,8 +135,13 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 |---|---|
 | `ign.spawn(asset, lat, lon [, alt, yaw, scale, color])` | Objekt zur Laufzeit spawnen → `id` |
 | `ign.despawn(id)` | Objekt entfernen → `true`/`false` |
+| `ign.objects()` | → Liste aller Laufzeit-Objekt-Ids |
+| `ign.obj_pos(id)` | → `lat, lon, alt` des Objekts |
 | `ign.move(id, lat, lon [, alt])` | Objekt versetzen (sofort; Gleit-Animation kommt) |
 | `ign.set_color(id, "#RRGGBB")` / `ign.set_scale(id, s)` | Objekt umfärben / skalieren |
+| `ign.set_yaw(id, grad)` | Objekt drehen (feste Ausrichtung) |
+| `ign.spin(id, grad_pro_sek)` | Dauerrotation um die Hochachse (0 = stopp) |
+| `ign.set_visible(id, an)` / `ign.set_collision(id, an)` | sichtbar / durchfliegbar schalten |
 | `ign.zone(name, lat, lon, radius_m)` | Trigger-Kreis anlegen → `on_enter`/`on_exit` |
 | `ign.remove_zone(name)` | Trigger-Kreis entfernen |
 
@@ -134,6 +151,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 |---|---|
 | `ign.sun(pitch, yaw)` | Sonnenwinkel in Grad (−90 = senkrecht Mittag, ~0 = Horizont) — Tag/Nacht per Skript |
 | `ign.fog(dichte [, r, g, b])` | Nebel: Dichte (~0.00015 Standard) + Farbe 0–1 |
+| `ign.grade(sättigung, kontrast [, vignette])` | Farbstimmung (1 = neutral) — Filmlook per Skript |
 
 **Beispiel:** [`race.lua`](race.lua) — ein komplettes Rennen über Checkpoint-Anker
 (`checkpoint_1…n`): Fortschritt und Zielzeit pro Spieler live im HUD. Zum Ausprobieren
