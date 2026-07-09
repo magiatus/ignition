@@ -40,7 +40,7 @@ Position als Breite/Länge in Grad, das Objekt landet automatisch **auf** dem Ge
 
 | Feld | Wirkung | Standard |
 |---|---|---|
-| `asset` | Palette-Name: `tree`, `tree_tall`, `pine`, `pine_tall`, `stone`, `cube`, `sphere`, `cone`, `cylinder` | Pflicht |
+| `asset` | Palette-Name (siehe Liste unten) | Pflicht |
 | `lat` / `lon` | Breite (−90…+90) / Länge (−180…+180) in Grad | `0` |
 | `alt` | Höhe **über dem Gelände** in Metern (zum Stapeln, z. B. Dach auf Turm) | `0` |
 | `yaw` | Drehung in Grad | `0` |
@@ -49,6 +49,18 @@ Position als Breite/Länge in Grad, das Objekt landet automatisch **auf** dem Ge
 
 Grundformen stehen mit der Unterkante auf dem Boden (Pivot wird ausgeglichen). Punkte im
 Wasser schwimmen auf dem Meeresspiegel. 1 Grad ≈ 260 m auf dem Standard-Planeten.
+
+**Palette** (`asset`-Namen, wächst über die Zeit):
+
+| Gruppe | Namen |
+|---|---|
+| Bäume & Pflanzen | `tree` · `tree_tall` · `pine` · `pine_tall` · `stump` · `log` · `bush` · `bush_wide` · `shrub` · `grass_tuft` |
+| Steine & Felsen | `stone` · `stone_a` · `stone_c` · `boulder` · `boulder_big` · `rock` · `rock2` · `river_rock` · `scree` · `cliff` · `rockface` · `snow` |
+| Berge (groß) | `mountain` · `mountain2` |
+| Grundformen (färbbar) | `cube` · `sphere` · `cone` · `cylinder` · `plane` |
+
+> Nur die Grundformen zeigen `color`. Alle anderen bringen ihre eigene Textur mit.
+> `mountain`/`mountain2` sind sehr groß — schon bei `scale: 1` echte Landmarken.
 
 ## Anker (`anchors`)
 
