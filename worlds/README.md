@@ -54,9 +54,9 @@ Wasser schwimmen auf dem Meeresspiegel. 1 Grad ≈ 260 m auf dem Standard-Planet
 
 | Gruppe | Namen |
 |---|---|
-| Bäume & Pflanzen | `tree` · `tree_tall` · `pine` · `pine_tall` · `stump` · `log` · `bush` · `bush_wide` · `shrub` · `grass_tuft` |
-| Steine & Felsen | `stone` · `stone_a` · `stone_c` · `boulder` · `boulder_big` · `rock` · `rock2` · `river_rock` · `scree` · `cliff` · `rockface` · `snow` |
-| Berge (groß) | `mountain` · `mountain2` |
+| Bäume & Pflanzen | `tree` · `tree_tall` · `pine` · `pine_tall` · `stump` · `log` · `bush` · `bush_wide` · `shrub` · `grass_tuft` · `grass_a` · `grass_b` · `grass_c` |
+| Steine & Felsen | `stone` · `stone_a` · `stone_c` · `stone_d` · `boulder` · `boulder_big` · `rock` · `rock2` · `river_rock` · `scree` · `scree2` · `scree_bend` · `cliff` · `rockface` · `rockface_closed` |
+| Schnee & Berge | `snow` · `snow_b` · `snow_c` · `snow_d` · `mountain` · `mountain2` · `cloud` |
 | Grundformen (färbbar) | `cube` · `sphere` · `cone` · `cylinder` · `plane` |
 
 > Nur die Grundformen zeigen `color`. Alle anderen bringen ihre eigene Textur mit.
@@ -99,8 +99,9 @@ Server zu reißen). Die Spieler brauchen **kein Update** — sie sehen das repli
 | `on_interact(p, id)` | Spieler drückt **E** vor einem Objekt (`id`) |
 | `on_key(p, key)` | Spieler drückt eine Taste (`"Q"`,`"R"`,`"T"`,`"C"`,`"V"`,`"B"`,`"3"`…`"9"`) |
 
-**Timer** (eingebaut, ohne `ign.`-Präfix): `after(sek, fn)`, `every(sek, fn)` → Handle,
-`stop(handle)`.
+**Timer & Komfort** (eingebaut, ohne `ign.`-Präfix): `after(sek, fn)`, `every(sek, fn)` → Handle,
+`stop(handle)`, `countdown(sek, präfix, fn)` (zeigt Countdown im HUD, ruft `fn` bei 0),
+`daycycle(minuten)` (dreht die Sonne einmal pro `minuten` durch Tag/Nacht).
 
 **API** (`ign.*` — Werkzeugkasten; `ign.api_version` = 5. Die Decke wächst — Modi wie
 Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua)):
@@ -115,8 +116,11 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.time()` | → Sekunden seit Serverstart |
 | `ign.set_score(p, n)` / `ign.add_score(p, d)` / `ign.score(p)` | Punktestand — HUD zeigt automatisch ein Scoreboard |
 | `ign.set_var(key, wert)` / `ign.var(key)` | Welt-Variable (Zahl/Text), repliziert; `nil` löscht |
+| `ign.store(key, wert)` / `ign.load(key)` | welt-lokale **Persistenz** (überlebt Neustart), Quota 256 Keys |
 | `ign.marker(name, lat, lon [, color])` / `ign.remove_marker(name)` | Welt-Marker (HUD projiziert + Rand-Pfeil) |
 | `ign.msg(p, text)` | private Einblendung NUR für Spieler `p` |
+| `ign.nearest_player(lat, lon)` | → Index des nächsten Spielers |
+| `ign.restart()` | Welt-Skript frisch neu laden (`on_start` feuert erneut) |
 | `ign.world_name()` | → Name der Welt |
 | `ign.player_count()` | → Anzahl Spieler |
 | `ign.player_name(p)` | → Anzeigename von Spieler `p` |
@@ -171,6 +175,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.sun(pitch, yaw)` | Sonnenwinkel in Grad (−90 = senkrecht Mittag, ~0 = Horizont) — Tag/Nacht per Skript |
 | `ign.fog(dichte [, r, g, b])` | Nebel: Dichte (~0.00015 Standard) + Farbe 0–1 |
 | `ign.grade(sättigung, kontrast [, vignette])` | Farbstimmung (1 = neutral) — Filmlook per Skript |
+| `ign.set_water_level(level)` | Meeresspiegel ändern (Flut/Ebbe) — baut die Welt neu auf, repliziert |
 
 **Beispiel:** [`race.lua`](race.lua) — ein komplettes Rennen über Checkpoint-Anker
 (`checkpoint_1…n`): Fortschritt und Zielzeit pro Spieler live im HUD. Zum Ausprobieren
