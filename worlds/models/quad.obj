@@ -1,0 +1,11 @@
+# Ignition — texturiertes Beispiel (Tier B): aufrechte 2x2-m-Tafel MIT UVs.
+# Zeigt, wie tex_url auf ein Modell gemappt wird. OBJ ist Y-hoch, in Metern.
+v -1.0 0.0 0.0
+v  1.0 0.0 0.0
+v  1.0 2.0 0.0
+v -1.0 2.0 0.0
+vt 0.0 0.0
+vt 1.0 0.0
+vt 1.0 1.0
+vt 0.0 1.0
+f 1/1 2/2 3/3 4/4

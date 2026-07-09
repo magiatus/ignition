@@ -11,6 +11,7 @@
   "placements": [
     { "mesh_url": "https://magiatus.github.io/ignition/worlds/models/pyramid.obj", "lat": -4.26, "lon": 15.74, "alt": 1, "scale": 6, "color": "#ff7a3c" },
     { "mesh_url": "https://magiatus.github.io/ignition/worlds/models/pyramid.obj", "lat": -4.24, "lon": 15.77, "alt": 1, "scale": 3, "color": "#5aa7ff" },
+    { "mesh_url": "https://magiatus.github.io/ignition/worlds/models/quad.obj", "tex_url": "https://magiatus.github.io/ignition/worlds/models/checker.png", "lat": -4.28, "lon": 15.72, "alt": 1, "scale": 4 },
     { "asset": "cylinder", "lat": -4.26, "lon": 15.74, "scale": 12, "color": "#20C040" }
   ]
 }

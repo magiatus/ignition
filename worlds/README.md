@@ -79,21 +79,22 @@ world.json „Daten, kein Programm" ist).
 | Feld | Wirkung |
 |---|---|
 | `mesh_url` | http/https-URL zu einer `.obj`-Datei (ersetzt `asset`). |
-| `tex_url` | *(vorgemerkt)* URL zu einer Diffus-Textur `.png/.jpg`. |
-| `color` | Tönung des Modells (bis eine Textur greift). |
+| `tex_url` | URL zu einer Diffus-Textur `.png`/`.jpg` — wird aufs Modell gemappt (braucht UVs). |
+| `color` | Tönung des Modells (wenn keine `tex_url` gesetzt ist). |
 | `scale` · `alt` · `lat` · `lon` · `yaw` | wie bei Palette-Objekten. |
 
 **Regeln fürs Modell:**
 - Format **Wavefront `.obj`** (Blender & Co. exportieren das direkt).
 - **Einheit = Meter, Y nach oben** (Blender-Standardexport). 1 OBJ-Einheit = 1 m × `scale`.
 - Nur Vertices/Faces (`v`/`vt`/`f`); `.mtl` wird ignoriert, die Tönung kommt aus `color`.
-- Deckel: **12 MB / ~300 000 Vertices** pro Modell (größere werden abgeschnitten).
-- Nur **http/https** — lokale Pfade werden abgelehnt. Hoste das `.obj` z. B. neben deiner Welt
-  auf GitHub, wie das Beispiel [`models/pyramid.obj`](models/pyramid.obj).
+- Deckel: **12 MB** Modell, **~300 000 Vertices**, **16 MB** Textur (größere werden abgelehnt).
+- Nur **http/https** — lokale Pfade werden abgelehnt. Hoste `.obj` + Textur z. B. neben deiner
+  Welt auf GitHub. Beispiele: [`models/pyramid.obj`](models/pyramid.obj) (ohne Textur),
+  [`models/quad.obj`](models/quad.obj) + [`models/checker.png`](models/checker.png) (mit UVs + Textur).
 
-> Textur-Rendering (`tex_url`) braucht ein kleines Material im Client-Paket und kommt als
-> nächster Schritt — Geometrie + Tönung funktionieren schon. Im Editor
-> ([„Welt bauen"](../editor.html)) wählst du dafür `◆ Eigenes Modell (URL)` in der Asset-Liste.
+> Für eine Textur braucht dein `.obj` **UV-Koordinaten** (`vt`) — die meisten Exporter legen sie
+> an. Im Editor ([„Welt bauen"](../editor.html)) wählst du `◆ Eigenes Modell (URL)` in der
+> Asset-Liste und trägst Modell- + Textur-URL ein.
 
 ## Anker (`anchors`)
 
@@ -255,5 +256,4 @@ Weg, die API zu lernen: nimm eines, ändere Anker/Werte, sieh was passiert.
 
 > Hinweis: Der Client baut den Planeten aus dem Seed **und** den Parametern, die der Server
 > schickt — er sieht also GENAU deine Welt. Terrain wird nicht übers Netz übertragen, nur
-> der Deskriptor. Eigene Modelle gehen bereits über `mesh_url` (siehe oben); als Nächstes
-> kommen Texturen dafür.
+> der Deskriptor. Eigene Modelle (`mesh_url`) samt Textur (`tex_url`) gehen bereits (siehe oben).
