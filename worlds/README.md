@@ -102,7 +102,7 @@ Server zu reißen). Die Spieler brauchen **kein Update** — sie sehen das repli
 **Timer** (eingebaut, ohne `ign.`-Präfix): `after(sek, fn)`, `every(sek, fn)` → Handle,
 `stop(handle)`.
 
-**API** (`ign.*` — Werkzeugkasten; `ign.api_version` = 2. Die Decke wächst — Modi wie
+**API** (`ign.*` — Werkzeugkasten; `ign.api_version` = 5. Die Decke wächst — Modi wie
 Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua)):
 
 *Info & Spieler*
