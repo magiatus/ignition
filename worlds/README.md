@@ -184,6 +184,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.fog(dichte [, r, g, b])` | Nebel: Dichte (~0.00015 Standard) + Farbe 0–1 |
 | `ign.grade(sättigung, kontrast [, vignette])` | Farbstimmung (1 = neutral) — Filmlook per Skript |
 | `ign.set_water_level(level)` | Meeresspiegel ändern (Flut/Ebbe) — baut die Welt neu auf, repliziert |
+| `ign.burst(effekt, lat, lon [, alt, scale])` | Effekt an einem Ort bei allen Spielern: `explosion`/`explosion2`/`explosion3`/`fire`/`torch`/`flame`/`blaze` |
 
 **Beispiel:** [`race.lua`](race.lua) — ein komplettes Rennen über Checkpoint-Anker
 (`checkpoint_1…n`): Fortschritt und Zielzeit pro Spieler live im HUD. Zum Ausprobieren
