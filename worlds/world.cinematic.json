@@ -1,0 +1,12 @@
+{
+  "name": "Kino-Modus",
+  "seed": 7,
+  "mountainScale": 1.6,
+  "waterLevel": -0.05,
+  "climateBias": -0.2,
+  "treeDensity": 1.2,
+  "anchors": [
+    { "name": "spawn", "lat": -4.26, "lon": 15.74 }
+  ],
+  "placements": []
+}

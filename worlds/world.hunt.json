@@ -1,0 +1,16 @@
+{
+  "name": "Schatzsuche",
+  "seed": 1,
+  "mountainScale": 1.0,
+  "waterLevel": 0.0,
+  "climateBias": 0.0,
+  "treeDensity": 1.0,
+  "anchors": [
+    { "name": "spawn",        "lat": -4.26, "lon": 15.74 },
+    { "name": "checkpoint_1", "lat": -4.10, "lon": 16.10 },
+    { "name": "checkpoint_2", "lat": -3.60, "lon": 16.40 },
+    { "name": "checkpoint_3", "lat": -3.20, "lon": 15.90 },
+    { "name": "treasure",     "lat": -3.20, "lon": 15.90 }
+  ],
+  "placements": []
+}

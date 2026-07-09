@@ -203,6 +203,21 @@ als `world.lua` neben deine world.json legen und Checkpoint-Anker eintragen.
   (4 Checkpoint-Anker mit Markierungs-Kugeln + komplettes Rennen-Skript; die Lua-Datei
   als `world.lua` neben die world.json legen)
 
+## Beispiel-Modi (komplette Spiele zum Abkupfern)
+
+Jeder Modus = eine `world.<name>.json` + eine `<name>.lua`. Zum Spielen die Lua-Datei als
+`world.lua` neben deine world.json legen (oder `-WorldScript=…/<name>.lua`).
+
+| Modus | Dateien | Zeigt |
+|---|---|---|
+| **Rennen** | [`world.race.json`](world.race.json) · [`race.lua`](race.lua) | Checkpoints, Distanz, Timer, Scoreboard |
+| **Kugel-Sammler** | [`world.collect.json`](world.collect.json) · [`collect.lua`](collect.lua) | `random_land`, Zonen, `on_enter`, Score, `burst`, Gewinn-Bedingung |
+| **Schatzsuche** | [`world.hunt.json`](world.hunt.json) · [`hunt.lua`](hunt.lua) | Marker-Kette, `on_interact` (E), Truhe, Sieg |
+| **Kino-Modus** | [`world.cinematic.json`](world.cinematic.json) · [`cinematic.lua`](cinematic.lua) | `daycycle`, `fog`/`grade`-Stimmung, `orbit`, Effekte |
+
+Diese vier Skripte nutzen zusammen fast den ganzen Werkzeugkasten — sie sind der schnellste
+Weg, die API zu lernen: nimm eines, ändere Anker/Werte, sieh was passiert.
+
 > Hinweis: Der Client baut den Planeten aus dem Seed **und** den Parametern, die der Server
 > schickt — er sieht also GENAU deine Welt. Terrain wird nicht übers Netz übertragen, nur
 > der Deskriptor. Das ist ein früher Prototyp; das Format kann sich noch erweitern (eigene
