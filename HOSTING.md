@@ -26,9 +26,17 @@ Leg deine Welt-Dateien **neben die Server-Exe** (in denselben Ordner wie `Igniti
 Der Server liest beides automatisch beim Start. Alternativ mit Pfad:
 `-WorldConfig=C:\pfad\world.json -WorldScript=C:\pfad\world.lua`.
 
+**Am einfachsten** ist der Ein-Klick-Starter (siehe unten): du musst dich um Startbefehl und
+Firewall nicht kümmern.
+
 ## 3. Starten
 
-Starte die **innere** Exe headless (nicht den Bootstrapper):
+**Ein-Klick:** Leg [`start-planet.bat`](hosting/start-planet.bat) +
+[`start-planet.ps1`](hosting/start-planet.ps1) in den Server-Ordner (neben `Ignition\`) und
+**doppelklick `start-planet.bat`**. Es findet die Server-Exe, öffnet einmalig den Firewall-Port
+(Admin-Abfrage) und startet deinen Planeten. Anderer Port: `start-planet.bat 7778`.
+
+**Oder von Hand** — die **innere** Exe headless (nicht den Bootstrapper):
 
 ```
 Ignition\Binaries\Win64\Ignition.exe /Game/PlanetTest?listen -nullrhi -nosound -unattended -log
