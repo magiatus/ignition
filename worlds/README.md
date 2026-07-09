@@ -165,7 +165,9 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.despawn(id)` | Objekt entfernen → `true`/`false` |
 | `ign.objects()` | → Liste aller Laufzeit-Objekt-Ids |
 | `ign.obj_pos(id)` | → `lat, lon, alt` des Objekts |
-| `ign.move(id, lat, lon [, alt])` | Objekt versetzen (sofort; Gleit-Animation kommt) |
+| `ign.move(id, lat, lon [, alt])` | Objekt sofort versetzen |
+| `ign.move_to(id, lat, lon, sek [, alt])` | Objekt gleitet in `sek` zum Ziel (animiert, repliziert) |
+| `ign.orbit(id, mitte_lat, mitte_lon, radius_m, sek_pro_umlauf)` | Kreisbahn um einen Punkt (`0` = stopp) |
 | `ign.set_color(id, "#RRGGBB")` / `ign.set_scale(id, s)` | Objekt umfärben / skalieren |
 | `ign.set_yaw(id, grad)` | Objekt drehen (feste Ausrichtung) |
 | `ign.spin(id, grad_pro_sek)` | Dauerrotation um die Hochachse (0 = stopp) |
