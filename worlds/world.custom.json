@@ -1,0 +1,16 @@
+{
+  "name": "Eigenes-Modell-Demo",
+  "seed": 1,
+  "mountainScale": 1.0,
+  "waterLevel": 0.0,
+  "climateBias": 0.0,
+  "treeDensity": 0.8,
+  "anchors": [
+    { "name": "spawn", "lat": -4.26, "lon": 15.74 }
+  ],
+  "placements": [
+    { "mesh_url": "https://magiatus.github.io/ignition/worlds/models/pyramid.obj", "lat": -4.26, "lon": 15.74, "alt": 1, "scale": 6, "color": "#ff7a3c" },
+    { "mesh_url": "https://magiatus.github.io/ignition/worlds/models/pyramid.obj", "lat": -4.24, "lon": 15.77, "alt": 1, "scale": 3, "color": "#5aa7ff" },
+    { "asset": "cylinder", "lat": -4.26, "lon": 15.74, "scale": 12, "color": "#20C040" }
+  ]
+}

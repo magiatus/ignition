@@ -62,6 +62,39 @@ Wasser schwimmen auf dem Meeresspiegel. 1 Grad ≈ 260 m auf dem Standard-Planet
 > Nur die Grundformen zeigen `color`. Alle anderen bringen ihre eigene Textur mit.
 > `mountain`/`mountain2` sind sehr groß — schon bei `scale: 1` echte Landmarken.
 
+## Eigene Modelle (`mesh_url`) — dein 3D-Modell in der Welt
+
+Reicht dir die Palette nicht, hänge ein **eigenes `.obj`-Modell** per URL an eine Platzierung
+(statt `asset`). Der Client lädt es zur Laufzeit herunter und baut daraus ein Mesh **mit
+Kollision**. Es ist **reine Geometrie — kein ausführbarer Code**, also sicher (genau wie die
+world.json „Daten, kein Programm" ist).
+
+```json
+"placements": [
+  { "mesh_url": "https://magiatus.github.io/ignition/worlds/models/pyramid.obj",
+    "lat": -4.26, "lon": 15.74, "alt": 2, "scale": 5, "color": "#ff7a3c" }
+]
+```
+
+| Feld | Wirkung |
+|---|---|
+| `mesh_url` | http/https-URL zu einer `.obj`-Datei (ersetzt `asset`). |
+| `tex_url` | *(vorgemerkt)* URL zu einer Diffus-Textur `.png/.jpg`. |
+| `color` | Tönung des Modells (bis eine Textur greift). |
+| `scale` · `alt` · `lat` · `lon` · `yaw` | wie bei Palette-Objekten. |
+
+**Regeln fürs Modell:**
+- Format **Wavefront `.obj`** (Blender & Co. exportieren das direkt).
+- **Einheit = Meter, Y nach oben** (Blender-Standardexport). 1 OBJ-Einheit = 1 m × `scale`.
+- Nur Vertices/Faces (`v`/`vt`/`f`); `.mtl` wird ignoriert, die Tönung kommt aus `color`.
+- Deckel: **12 MB / ~300 000 Vertices** pro Modell (größere werden abgeschnitten).
+- Nur **http/https** — lokale Pfade werden abgelehnt. Hoste das `.obj` z. B. neben deiner Welt
+  auf GitHub, wie das Beispiel [`models/pyramid.obj`](models/pyramid.obj).
+
+> Textur-Rendering (`tex_url`) braucht ein kleines Material im Client-Paket und kommt als
+> nächster Schritt — Geometrie + Tönung funktionieren schon. Im Editor
+> ([„Welt bauen"](../editor.html)) wählst du dafür `◆ Eigenes Modell (URL)` in der Asset-Liste.
+
 ## Anker (`anchors`)
 
 Benannte Punkte auf der Welt. Heute zählt vor allem **`spawn`** — dort starten die Spieler
@@ -202,6 +235,8 @@ als `world.lua` neben deine world.json legen und Checkpoint-Anker eintragen.
 - [`world.race.json`](world.race.json) + [`race.lua`](race.lua) — Küsten-Rennen
   (4 Checkpoint-Anker mit Markierungs-Kugeln + komplettes Rennen-Skript; die Lua-Datei
   als `world.lua` neben die world.json legen)
+- [`world.custom.json`](world.custom.json) — zwei **eigene `.obj`-Modelle** per `mesh_url`
+  (die [`models/pyramid.obj`](models/pyramid.obj)) neben einer Palette-Form am Startpunkt
 
 ## Beispiel-Modi (komplette Spiele zum Abkupfern)
 
@@ -220,5 +255,5 @@ Weg, die API zu lernen: nimm eines, ändere Anker/Werte, sieh was passiert.
 
 > Hinweis: Der Client baut den Planeten aus dem Seed **und** den Parametern, die der Server
 > schickt — er sieht also GENAU deine Welt. Terrain wird nicht übers Netz übertragen, nur
-> der Deskriptor. Das ist ein früher Prototyp; das Format kann sich noch erweitern (eigene
-> Meshes/Layout im UE-Editor sind der nächste Ausbau).
+> der Deskriptor. Eigene Modelle gehen bereits über `mesh_url` (siehe oben); als Nächstes
+> kommen Texturen dafür.

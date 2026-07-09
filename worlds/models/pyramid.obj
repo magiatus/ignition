@@ -1,0 +1,17 @@
+# Ignition — Beispiel fuer ein EIGENES Modell (Tier B).
+# Eine Pyramide: 2 m Grundflaeche, 2 m hoch. OBJ ist Y-hoch, in METERN.
+# Referenziere sie in world.json:  { "mesh_url": "https://.../pyramid.obj", "lat":..., "lon":... }
+# Reine Geometrie (v/f) = sicher; der Client baut daraus zur Laufzeit ein ProceduralMesh.
+v -1.0 0.0 -1.0
+v  1.0 0.0 -1.0
+v  1.0 0.0  1.0
+v -1.0 0.0  1.0
+v  0.0 2.0  0.0
+# Grundflaeche
+f 4 3 2
+f 2 1 4
+# vier Seiten zur Spitze
+f 1 2 5
+f 2 3 5
+f 3 4 5
+f 4 1 5
