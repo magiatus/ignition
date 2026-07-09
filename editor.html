@@ -105,6 +105,7 @@
       <div class="tools">
         <div class="tool on" data-tool="place">Objekt</div>
         <div class="tool" data-tool="anchor">Anker</div>
+        <div class="tool" data-tool="select">Wählen</div>
         <div class="tool" data-tool="del">Löschen</div>
       </div>
       <div id="objProps">
@@ -221,6 +222,13 @@
       ctx.strokeStyle='#4cd97b'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(p.x,p.y,8,0,7); ctx.stroke();
       ctx.fillStyle='#4cd97b'; ctx.font='11px ui-monospace,monospace'; ctx.fillText('⚑ '+a.name,p.x+11,p.y+4);
     });
+    // Auswahl-Markierung (gestrichelter Ring)
+    if(sel.kind){
+      var it=sel.kind==='o'?objs[sel.i]:anchors[sel.i];
+      if(it){ var ps=latLonToPx(it.lat,it.lon);
+        ctx.strokeStyle='#ffb347'; ctx.lineWidth=2; ctx.setLineDash([4,3]);
+        ctx.beginPath(); ctx.arc(ps.x,ps.y,12,0,7); ctx.stroke(); ctx.setLineDash([]); }
+    }
     $('cnt').textContent=objs.length+' Objekte'; $('acnt').textContent=anchors.length+' Anker';
     renderList(); renderJson();
   }
@@ -232,10 +240,14 @@
     return {i:best,kind:kind};
   }
 
-  // ---- Undo (Strg+Z): Schnappschuss VOR jeder Aenderung ----
+  // ---- Auswahl/Bewegen-Status ----
+  var sel={i:-1,kind:null};   // aktuell gewaehltes Objekt ('o') / Anker ('a')
+  var drag=null;              // laufendes Ziehen {kind,i}
+
+  // ---- Undo (Strg+Z): Schnappschuss VOR jeder Aenderung (dedupt gleiche Zustaende) ----
   var history=[];
-  function snapshot(){ history.push(JSON.stringify({o:objs,a:anchors})); if(history.length>60)history.shift(); }
-  function undo(){ if(!history.length)return; var s=JSON.parse(history.pop()); objs=s.o; anchors=s.a; draw(); }
+  function snapshot(){ var s=JSON.stringify({o:objs,a:anchors}); if(history.length&&history[history.length-1]===s)return; history.push(s); if(history.length>60)history.shift(); }
+  function undo(){ if(!history.length)return; var s=JSON.parse(history.pop()); objs=s.o; anchors=s.a; sel={i:-1,kind:null}; draw(); }
   document.addEventListener('keydown',function(e){
     if((e.ctrlKey||e.metaKey)&&(e.key==='z'||e.key==='Z')){
       var t=(e.target.tagName||''); if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
@@ -255,10 +267,12 @@
     objs=Array.isArray(d.placements)?d.placements.map(function(o){return Object.assign({},o);}):[];
     var sp=anchors.filter(function(a){return a.name==='spawn';})[0]||anchors[0];
     if(sp){ $('c_lat').value=sp.lat; $('c_lon').value=sp.lon; }
+    sel={i:-1,kind:null};
     draw();
   }
 
   cv.addEventListener('click',function(e){
+    if(tool==='select') return; // Wählen/Bewegen laeuft ueber die pointer-Events unten
     var r=cv.getBoundingClientRect();
     var px=(e.clientX-r.left)*(cv.width/r.width), py=(e.clientY-r.top)*(cv.height/r.height);
     if(tool==='del'){ var n=nearest(px,py); if(n.kind==='o'){snapshot();objs.splice(n.i,1);} else if(n.kind==='a'){snapshot();anchors.splice(n.i,1);} draw(); return; }
@@ -278,12 +292,51 @@
     draw();
   });
 
+  // ---- Wählen/Bewegen: Objekt/Anker ziehen, Objekt-Eigenschaften rechts live bearbeiten ----
+  function evPx(e){ var r=cv.getBoundingClientRect(); return {px:(e.clientX-r.left)*(cv.width/r.width), py:(e.clientY-r.top)*(cv.height/r.height)}; }
+  function selectItem(kind,i){
+    sel={i:i,kind:kind};
+    if(kind==='o'){ var o=objs[i];
+      $('p_asset').value=o.asset; $('p_scale').value=o.scale!=null?o.scale:1;
+      $('p_alt').value=o.alt||0; if(o.color)$('p_color').value=o.color;
+    }
+    draw();
+  }
+  cv.addEventListener('mousedown',function(e){
+    if(tool!=='select') return;
+    var q=evPx(e), n=nearest(q.px,q.py);
+    if(n.kind){ snapshot(); selectItem(n.kind,n.i); drag={kind:n.kind,i:n.i}; }
+    else { sel={i:-1,kind:null}; draw(); }
+  });
+  window.addEventListener('mousemove',function(e){
+    if(!drag) return;
+    var q=evPx(e), ll=pxToLatLon(q.px,q.py);
+    var it=drag.kind==='o'?objs[drag.i]:anchors[drag.i];
+    if(it){ it.lat=ll.lat; it.lon=ll.lon; draw(); }
+  });
+  window.addEventListener('mouseup',function(){ drag=null; });
+
+  // Eigenschaften des gewaehlten Objekts live aendern (nur im Wählen-Modus)
+  ['p_asset','p_scale','p_alt','p_color'].forEach(function(id){
+    $(id).addEventListener('input',function(){
+      if(tool!=='select'||sel.kind!=='o') return;
+      var o=objs[sel.i]; if(!o) return;
+      o.asset=$('p_asset').value;
+      var sc=parseFloat($('p_scale').value); if(sc&&sc!==1)o.scale=sc; else delete o.scale;
+      var al=parseFloat($('p_alt').value); if(al)o.alt=al; else delete o.alt;
+      if(SHAPES[o.asset])o.color=$('p_color').value; else delete o.color;
+      draw();
+    });
+  });
+
   document.querySelectorAll('.tool').forEach(function(t){
     t.addEventListener('click',function(){
       document.querySelectorAll('.tool').forEach(function(x){x.classList.remove('on');});
       t.classList.add('on'); tool=t.dataset.tool;
-      $('objProps').style.display=tool==='place'?'':'none';
+      $('objProps').style.display=(tool==='place'||tool==='select')?'':'none';
       $('anchorProps').style.display=tool==='anchor'?'':'none';
+      if(tool!=='select'){ sel={i:-1,kind:null}; }
+      draw();
     });
   });
 
