@@ -123,6 +123,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.restart()` | Welt-Skript frisch neu laden (`on_start` feuert erneut) |
 | `ign.world_name()` | → Name der Welt |
 | `ign.player_count()` | → Anzahl Spieler |
+| `ign.all_players()` | → Liste aller Spieler-Indizes |
 | `ign.player_name(p)` | → Anzeigename von Spieler `p` |
 | `ign.player_pos(p)` | → `lat, lon, alt_m` von Spieler `p` (oder `nil`) |
 | `ign.player_vel(p)` | → Tempo in m/s |
@@ -145,6 +146,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.slope(lat, lon)` | → Hangneigung in Grad (0 = flach, 90 = senkrecht) |
 | `ign.biome(lat, lon)` | → `temp` (0 polar…1 tropisch), `moist` (0 trocken…1 nass) |
 | `ign.anchor(name)` | → `lat, lon` des Ankers aus der world.json (oder `nil`) |
+| `ign.anchors()` | → Liste aller Anker-Namen |
 | `ign.find_land(lat, lon)` | → nächster Landpunkt als `lat, lon` |
 | `ign.random_land(lat, lon, radius_m)` | → zufälliger Landpunkt im Umkreis (oder `nil`) |
 | `ign.bearing(lat1,lon1,lat2,lon2)` | → Kurswinkel 0–360° von A nach B |
@@ -165,6 +167,7 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.set_yaw(id, grad)` | Objekt drehen (feste Ausrichtung) |
 | `ign.spin(id, grad_pro_sek)` | Dauerrotation um die Hochachse (0 = stopp) |
 | `ign.set_visible(id, an)` / `ign.set_collision(id, an)` | sichtbar / durchfliegbar schalten |
+| `ign.set_label(id, text)` | schwebende Schrift über dem Objekt (`""` = weg) |
 | `ign.zone(name, lat, lon, radius_m)` | Trigger-Kreis anlegen → `on_enter`/`on_exit` |
 | `ign.remove_zone(name)` | Trigger-Kreis entfernen |
 
