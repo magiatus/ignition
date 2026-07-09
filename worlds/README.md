@@ -115,6 +115,9 @@ Rennen oder Angeln baust DU aus diesen Bausteinen, siehe [`race.lua`](race.lua))
 | `ign.title(text)` | große Einblendung in der Bildschirmmitte (`""` = weg) |
 | `ign.time()` | → Sekunden seit Serverstart |
 | `ign.set_score(p, n)` / `ign.add_score(p, d)` / `ign.score(p)` | Punktestand — HUD zeigt automatisch ein Scoreboard |
+| `ign.leader()` / `ign.rank(p)` | → führender Spieler / Platz von `p` nach Score |
+| `ign.set_name(p, name)` | Anzeigenamen setzen (erscheint im Scoreboard) |
+| `ign.impulse(p, vor, hoch)` | physischer Schubs in m/s (nur Läufer) — Sprungpad/Rückstoß |
 | `ign.set_var(key, wert)` / `ign.var(key)` | Welt-Variable (Zahl/Text), repliziert; `nil` löscht |
 | `ign.store(key, wert)` / `ign.load(key)` | welt-lokale **Persistenz** (überlebt Neustart), Quota 256 Keys |
 | `ign.marker(name, lat, lon [, color])` / `ign.remove_marker(name)` | Welt-Marker (HUD projiziert + Rand-Pfeil) |
