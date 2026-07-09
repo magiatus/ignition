@@ -1,0 +1,18 @@
+name: Verzeichnis prüfen
+
+# Torwächter fuer den "neue Welt = Pull Request"-Flow: jede Aenderung an planets.json
+# wird automatisch auf gueltige Struktur geprueft, bevor sie ins Verzeichnis kommt.
+on:
+  pull_request:
+    paths: ['planets.json']
+  push:
+    branches: [main]
+    paths: ['planets.json']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: planets.json validieren
+        run: node .github/validate-planets.js

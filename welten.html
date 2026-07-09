@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IGNITION — Welten-Verzeichnis</title>
+<meta name="description" content="Alle andockbaren Ignition-Planeten: wähle eine Welt und tritt bei, oder starte den Client.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{
+    --bg:#07090f; --bg2:#0c101c; --panel:#111624; --panel2:#151b2c;
+    --line:#232c44; --line2:#2e3a5c; --txt:#eef2fb; --mut:#96a0bd;
+    --fire:#ff7a3c; --fire2:#ffb347; --sky:#5aa7ff; --deep:#274b8f; --ok:#4cd97b;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;line-height:1.6;min-height:100vh}
+  a{color:var(--sky);text-decoration:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+  header{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  header::before{content:"";position:absolute;inset:-50% 0 auto 0;height:340px;
+    background:radial-gradient(60% 100% at 50% 0,rgba(90,167,255,.16),transparent 70%);pointer-events:none}
+  header .wrap{position:relative;padding:44px 22px 34px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--sky);margin-bottom:14px}
+  h1{font-size:clamp(30px,6vw,50px);line-height:1.05;letter-spacing:-.02em;font-weight:800}
+  .sub{color:var(--mut);margin-top:14px;max-width:60ch}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;padding:12px 20px;border-radius:11px;border:1px solid var(--line2);color:var(--txt);cursor:pointer;background:var(--panel2)}
+  .btn.primary{background:linear-gradient(180deg,var(--fire2),var(--fire));color:#1a0d04;border:none}
+  .btn:hover{filter:brightness(1.08)}
+  .btn:focus-visible{outline:2px solid var(--sky);outline-offset:3px}
+
+  main{padding:38px 0 60px}
+  .bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+  .bar h2{font-size:20px;font-weight:700}
+  .count{font-family:var(--mono);font-size:13px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 11px}
+  input.search{flex:1;min-width:160px;background:var(--panel);border:1px solid var(--line);border-radius:9px;color:var(--txt);padding:11px 14px;font-size:14px}
+  input.search:focus{outline:none;border-color:var(--line2)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 19px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s}
+  .card:hover{border-color:var(--line2)}
+  .card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .card h3{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .seedtag{font-family:var(--mono);font-size:11px;color:var(--mut);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 8px;white-space:nowrap}
+  .meta{font-family:var(--mono);font-size:12.5px;color:var(--mut);display:flex;flex-direction:column;gap:4px}
+  .meta .row{display:flex;gap:7px}
+  .meta .k{color:var(--line2);min-width:52px}
+  .card .join{margin-top:auto;display:inline-flex;justify-content:center;align-items:center;gap:8px;font-weight:600;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:11px 0;color:var(--txt)}
+  .card .join:hover{background:var(--deep);border-color:var(--sky)}
+  .empty{color:var(--mut);font-family:var(--mono);font-size:14px;padding:30px;text-align:center;border:1px dashed var(--line);border-radius:12px}
+  footer{border-top:1px solid var(--line);padding:26px 0}
+  footer .wrap{color:var(--mut);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+  .note{font-family:var(--mono);font-size:12px;color:var(--mut);margin-top:18px;line-height:1.6;border-left:2px solid var(--line2);padding-left:13px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <p class="eyebrow">Welten-Verzeichnis · live von GitHub</p>
+  <h1>Wähle einen Planeten.</h1>
+  <p class="sub">Jede Welt ist ein von einem Menschen gebauter Planet mit eigenem Gameplay,
+    selbst gehostet. Wähle eine aus und tritt bei — oder starte zuerst den Client.</p>
+  <div class="actions">
+    <a class="btn primary" href="ignition://" id="startClient">▶ Client starten</a>
+    <a class="btn" href="index.html">Über Ignition</a>
+    <a class="btn" href="https://github.com/magiatus/ignition" target="_blank" rel="noopener">Auf GitHub</a>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+  <div class="bar">
+    <h2>Verfügbare Welten</h2>
+    <span class="count" id="count">lädt …</span>
+    <input class="search" id="search" type="search" placeholder="Welt oder Ersteller suchen …" aria-label="Welten durchsuchen">
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="note" id="note"></p>
+</div></main>
+
+<footer><div class="wrap">
+  <span>IGNITION · föderiertes Universum aus selbst-gehosteten Planeten</span>
+  <span>Verzeichnis: <code>planets.json</code> · neue Welt = Pull Request</span>
+</div></footer>
+
+<script>
+(function(){
+  var grid = document.getElementById('grid');
+  var count = document.getElementById('count');
+  var note = document.getElementById('note');
+  var search = document.getElementById('search');
+  var worlds = [];
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function render(list){
+    grid.innerHTML = '';
+    if(!list.length){
+      grid.innerHTML = '<div class="empty">Keine Welten gefunden.</div>';
+      return;
+    }
+    list.forEach(function(w){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<div class="top"><h3>'+esc(w.name||'Unbenannt')+'</h3>'+
+          '<span class="seedtag">Seed '+esc(w.seed)+'</span></div>'+
+        '<div class="meta">'+
+          '<div class="row"><span class="k">Ersteller</span><span>'+esc(w.author||'—')+'</span></div>'+
+          '<div class="row"><span class="k">Adresse</span><span>'+esc(w.address||'—')+'</span></div>'+
+        '</div>'+
+        '<a class="join" href="ignition://join/'+encodeURIComponent(w.address||'')+'">Beitreten →</a>';
+      grid.appendChild(card);
+    });
+  }
+
+  function apply(){
+    var q = search.value.trim().toLowerCase();
+    var list = worlds.filter(function(w){
+      if(!q) return true;
+      return ((w.name||'')+' '+(w.author||'')).toLowerCase().indexOf(q) !== -1;
+    });
+    render(list);
+  }
+
+  search.addEventListener('input', apply);
+
+  // Cache-Buster wie im Client: frische planets.json trotz raw-CDN-Cache.
+  fetch('planets.json?t=' + Date.now())
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data){
+      worlds = (data && data.worlds) ? data.worlds : [];
+      count.textContent = worlds.length + (worlds.length===1?' Welt':' Welten');
+      note.textContent = 'Live geladen aus planets.json. Der Client prüft den Online-Status jeder '
+        + 'Welt selbst beim Beitreten — tote Portale melden sich als „nicht erreichbar".';
+      render(worlds);
+    })
+    .catch(function(e){
+      count.textContent = 'Fehler';
+      grid.innerHTML = '<div class="empty">Verzeichnis konnte nicht geladen werden ('+esc(e.message)+').</div>';
+    });
+})();
+</script>
+</body>
+</html>
