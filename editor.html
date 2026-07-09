@@ -120,6 +120,8 @@
       <textarea id="json" readonly></textarea>
       <button class="btn fire" id="dl">world.json herunterladen</button>
       <button class="btn ghost" id="copy">In Zwischenablage kopieren</button>
+      <button class="btn ghost" id="imp">world.json laden &amp; bearbeiten</button>
+      <input id="impfile" type="file" accept=".json,application/json" style="display:none">
       <p class="hint">Leg die Datei als <code>world.json</code> neben deinen Server.</p>
     </div>
     <div class="grp">
@@ -335,6 +337,32 @@
 '    else ign.fog(0.0004, 0.4,0.5,0.7); ign.grade(0.9,1.2,0.4) end\n  end)\n' +
 '  every(3, function()\n    ign.burst("explosion2", (sl or 0)+(math.random()-0.5)*0.2, (so or 0)+(math.random()-0.5)*0.2, 120, 3)\n  end)\nend\n'
   };
+  // ---- Bestehende world.json laden & weiterbearbeiten ----
+  $('imp').onclick=function(){ $('impfile').click(); };
+  $('impfile').onchange=function(e){
+    var f=e.target.files[0]; if(!f) return;
+    var rd=new FileReader();
+    rd.onload=function(){
+      try{
+        var d=JSON.parse(rd.result);
+        if(d.name!=null)$('w_name').value=d.name;
+        if(d.seed!=null)$('w_seed').value=d.seed;
+        if(d.mountainScale!=null)$('w_mtn').value=d.mountainScale;
+        if(d.waterLevel!=null)$('w_water').value=d.waterLevel;
+        if(d.climateBias!=null)$('w_climate').value=d.climateBias;
+        if(d.treeDensity!=null)$('w_trees').value=d.treeDensity;
+        anchors=Array.isArray(d.anchors)?d.anchors.map(function(a){return {name:a.name,lat:a.lat,lon:a.lon};}):[];
+        objs=Array.isArray(d.placements)?d.placements.map(function(o){return Object.assign({},o);}):[];
+        // Mitte auf den spawn-Anker setzen, damit alles im Bild liegt
+        var sp=anchors.filter(function(a){return a.name==='spawn';})[0]||anchors[0];
+        if(sp){ $('c_lat').value=sp.lat; $('c_lon').value=sp.lon; }
+        draw();
+      }catch(err){ alert('Konnte world.json nicht lesen: '+err.message); }
+    };
+    rd.readAsText(f);
+    e.target.value='';
+  };
+
   $('dllua').onclick=function(){
     var code=LUA[$('mode').value]||LUA.none;
     var blob=new Blob([code],{type:'text/plain'});
