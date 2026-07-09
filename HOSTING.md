@@ -71,6 +71,24 @@ Eintrag; nach dem Merge zeigt der Client deine Welt **ohne Neubau** an.
 
 ---
 
+## Der Hub-Server (Sammel-Lobby)
+
+Der **Hub** ist die begehbare Ankunfts-Welt: man landet in einem Ring aus **Portal-Kugeln**,
+über jeder schwebt ein Weltname, und die **Zahlentaste** dockt an die jeweilige Welt an. Die
+Portale entstehen automatisch aus dem Live-Verzeichnis (`planets.json`) — neue Welt im
+Verzeichnis = neues Portal im Hub, ohne Neubau.
+
+Einen Hub startet man wie einen normalen Server, nur mit dem Zusatz-Flag **`-Hub`**:
+
+```
+Ignition\Binaries\Win64\Ignition.exe /Game/PlanetTest?listen -Hub -nullrhi -nosound -unattended -log
+```
+
+- Ohne eigene `world.json` zieht der Ring einen sinnvollen Standard-Landepunkt; mit einem
+  `spawn`-Anker in der `world.json` steht der Ring genau um diesen Punkt.
+- Der Hub ist gedacht als **eine** zentrale Lobby (der Owner betreibt sie); jede Spielwelt
+  bleibt ihr eigener, unabhängiger Server.
+
 ## Betriebs-Tipps
 
 - **Dauerbetrieb:** als geplante Aufgabe (SYSTEM, At-Startup, Neustart bei Absturz) — dann
