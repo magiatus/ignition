@@ -120,8 +120,20 @@
       <textarea id="json" readonly></textarea>
       <button class="btn fire" id="dl">world.json herunterladen</button>
       <button class="btn ghost" id="copy">In Zwischenablage kopieren</button>
-      <p class="hint">Leg die Datei als <code>world.json</code> neben deinen Server. Ein Skript
-        (<code>world.lua</code>) machst du separat — siehe <a href="worlds/">Beispiel-Modi</a>.</p>
+      <p class="hint">Leg die Datei als <code>world.json</code> neben deinen Server.</p>
+    </div>
+    <div class="grp">
+      <h2>Gameplay (optional)</h2>
+      <label>Spielmodus</label>
+      <select id="mode">
+        <option value="none">Erkunden (kein Skript)</option>
+        <option value="race">Rennen (nutzt checkpoint_1…n)</option>
+        <option value="collect">Kugeln sammeln</option>
+        <option value="cinematic">Kino / Atmosphäre</option>
+      </select>
+      <button class="btn ghost" id="dllua" style="margin-top:10px">world.lua herunterladen</button>
+      <p class="hint" id="modehint">Erzeugt ein fertiges Start-Skript. Leg es als
+        <code>world.lua</code> neben die world.json. Zum Anpassen: <a href="worlds/">API-Doku</a>.</p>
     </div>
   </aside>
 </div>
@@ -268,6 +280,66 @@
   ['c_lat','c_lon','c_span','w_name','w_seed','w_mtn','w_water','w_climate','w_trees'].forEach(function(id){
     $(id).addEventListener('input',draw);
   });
+
+  // ---- world.lua-Generator (fertige Start-Skripte pro Modus) ----
+  var LUA = {
+    none:
+'-- Erkunden: kein Gameplay, nur ein Willkommens-Hinweis.\n' +
+'function on_start()\n  ign.hud("Willkommen auf ' + '\'"..ign.world_name().."\'' + '")\nend\n',
+    race:
+'-- Rennen: fliege der Reihe nach durch alle checkpoint_1..n-Anker.\n' +
+'local cps, prog, fin, t0 = {}, {}, {}, 0\nlocal R = 400\n\n' +
+'function on_start()\n' +
+'  local i = 1\n' +
+'  while true do local la, lo = ign.anchor("checkpoint_"..i); if not la then break end\n' +
+'    cps[i] = {lat=la, lon=lo}; ign.marker("cp"..i, la, lo, "#FFD020"); i = i + 1 end\n' +
+'  t0 = ign.time()\n  ign.title("RENNEN")\n  after(2.5, function() ign.title("") end)\n' +
+'  ign.hud("RENNEN  "..#cps.." Checkpoints")\nend\n\n' +
+'function on_player_join(p) prog[p] = 1 end\n\n' +
+'function on_tick(dt)\n  if #cps == 0 then return end\n' +
+'  local lines = {string.format("RENNEN  %.0f s", ign.time()-t0)}\n' +
+'  for p = 1, ign.player_count() do\n    prog[p] = prog[p] or 1\n' +
+'    local lat, lon = ign.player_pos(p)\n' +
+'    if lat and not fin[p] then\n      local cp = cps[prog[p]]\n' +
+'      if cp and ign.dist(lat, lon, cp.lat, cp.lon) < R then\n' +
+'        if prog[p] == #cps then fin[p] = ign.time()-t0\n' +
+'          local pl,po = ign.player_pos(p); if pl then ign.burst("explosion3", pl, po, 60, 3) end\n' +
+'        else ign.remove_marker("cp"..prog[p]) end\n        prog[p] = prog[p] + 1\n      end\n    end\n' +
+'    if fin[p] then lines[#lines+1] = string.format("Spieler %d: ZIEL %.1f s", p, fin[p])\n' +
+'    else lines[#lines+1] = string.format("Spieler %d: CP %d/%d", p, math.min(prog[p], #cps), #cps) end\n' +
+'  end\n  ign.hud(table.concat(lines, "\\n"))\nend\n',
+    collect:
+'-- Kugeln sammeln: 6 leuchtende Kugeln an zufaelligen Landpunkten, durchfliegen = einsammeln.\n' +
+'local orbs, left = {}, 0\n\n' +
+'function on_start()\n  local slat, slon = ign.anchor("spawn"); slat = slat or 0; slon = slon or 0\n' +
+'  for i = 1, 6 do\n    local la, lo = ign.random_land(slat, slon, 1500)\n    if la then\n' +
+'      local id = ign.spawn("sphere", la, lo, 60, 0, 14, "#30E0FF"); ign.spin(id, 70)\n' +
+'      ign.zone("orb"..i, la, lo, 130); orbs["orb"..i] = id; left = left + 1\n    end\n  end\n' +
+'  ign.set_score(1, 0); ign.hud("SAMMLE DIE "..left.." KUGELN")\nend\n\n' +
+'function on_player_join(p) ign.set_score(p, 0) end\n\n' +
+'function on_enter(p, zone)\n  local id = orbs[zone]; if not id then return end\n' +
+'  local la, lo = ign.obj_pos(id); ign.despawn(id); ign.remove_zone(zone); orbs[zone] = nil\n' +
+'  if la then ign.burst("explosion", la, lo, 60, 2) end\n' +
+'  ign.add_score(p, 10); left = left - 1; ign.msg(p, "Eingesammelt! Noch "..left)\n' +
+'  if left == 0 then ign.title("GEWONNEN!"); ign.hud("Alle Kugeln gesammelt!")\n' +
+'  else ign.hud("SAMMLE DIE KUGELN - noch "..left) end\nend\n',
+    cinematic:
+'-- Kino: Tag/Nacht, wechselnde Stimmung, kreisende Kugel, Effekte.\n' +
+'function on_start()\n  daycycle(2)\n' +
+'  local s = ign.spawn("sphere", ign.anchor("spawn"), 220, 0, 30, "#30E0FF")\n' +
+'  local sl, so = ign.anchor("spawn"); ign.orbit(s, sl or 0, so or 0, 450, 12); ign.spin(s, 40)\n' +
+'  ign.title("IGNITION"); after(4, function() ign.title("") end)\n' +
+'  local mood = 0\n  every(8, function()\n    mood = (mood + 1) % 3\n' +
+'    if mood == 0 then ign.fog(0.0002, 0.6,0.7,0.9); ign.grade(1.1,1.05,0.3)\n' +
+'    elseif mood == 1 then ign.fog(0.0006, 1.0,0.6,0.3); ign.grade(1.4,1.1,0.5)\n' +
+'    else ign.fog(0.0004, 0.4,0.5,0.7); ign.grade(0.9,1.2,0.4) end\n  end)\n' +
+'  every(3, function()\n    ign.burst("explosion2", (sl or 0)+(math.random()-0.5)*0.2, (so or 0)+(math.random()-0.5)*0.2, 120, 3)\n  end)\nend\n'
+  };
+  $('dllua').onclick=function(){
+    var code=LUA[$('mode').value]||LUA.none;
+    var blob=new Blob([code],{type:'text/plain'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='world.lua'; a.click();
+  };
 
   // Start mit einem Spawn-Anker in der Mitte
   anchors.push({name:'spawn',lat:parseFloat($('c_lat').value),lon:parseFloat($('c_lon').value)});
